@@ -24,6 +24,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IComboService, ComboService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 var app = builder.Build();
 

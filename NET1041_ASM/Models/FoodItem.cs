@@ -23,10 +23,11 @@ namespace NET1041_ASM.Models
         [MaxLength(500)]
         public string ImagePath { get; set; }
 
-        // Quan hệ
+        // Relationship
         public int CategoryID { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<ComboFoodItem> ComboFoodItems { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
     }
 }

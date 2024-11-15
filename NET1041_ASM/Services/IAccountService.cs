@@ -6,6 +6,7 @@ namespace NET1041_ASM.Services
     {
         bool Login(string username, string password);
         bool Register(User registerUser);
+        void CreateCartForUser(int userId);
         User GetByUsername(string username);
         void Update(User user);
     }

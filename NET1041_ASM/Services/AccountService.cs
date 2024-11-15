@@ -12,6 +12,17 @@ namespace NET1041_ASM.Services
             _dbContext = dbContext;
         }
 
+        public void CreateCartForUser(int userId)
+        {
+            var cart = new Cart
+            {
+                UserID = userId
+            };
+
+            _dbContext.Carts.Add(cart);
+            _dbContext.SaveChanges();
+        }
+
         public User GetByUsername(string username)
         {
             return _dbContext.Users.FirstOrDefault(u => u.Username == username);
@@ -48,6 +59,8 @@ namespace NET1041_ASM.Services
 
             _dbContext.Users.Add(registerUser);
             _dbContext.SaveChanges();
+
+            CreateCartForUser(registerUser.UserID);
 
             return true;
         }

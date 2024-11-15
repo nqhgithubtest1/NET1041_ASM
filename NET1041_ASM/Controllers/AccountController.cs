@@ -20,16 +20,6 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult Register([FromForm] User registerUser)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                foreach (var error in errors)
-                {
-                    Console.WriteLine(error);
-                }
-                return View(registerUser);
-            }
-
             if (!_accountService.Register(registerUser))
             {
                 return View(registerUser);
@@ -51,7 +41,10 @@ namespace NET1041_ASM.Controllers
                 return View(loginUser);
             }
 
+            loginUser = _accountService.GetByUsername(loginUser.Username);
+
             HttpContext.Session.SetString("Username", loginUser.Username);
+            HttpContext.Session.SetString("UserID", loginUser.UserID.ToString());
             HttpContext.Session.SetString("UserRole", loginUser.Role);
 
             return RedirectToAction("Index", "Food");

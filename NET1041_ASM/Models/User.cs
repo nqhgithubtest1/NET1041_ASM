@@ -29,5 +29,6 @@ namespace NET1041_ASM.Models
 
         // Lazy loading
         public virtual ICollection<Order>? Orders { get; set; }
+        public virtual Cart Cart { get; set; }
     }
 }

@@ -17,6 +17,8 @@ namespace NET1041_ASM.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +51,21 @@ namespace NET1041_ASM.Context
                 .WithMany(c => c.OrderDetails)
                 .HasForeignKey(od => od.ComboID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Cart)
+                .WithOne(c => c.User)
+                .HasForeignKey<Cart>(c => c.UserID);
+
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.CartItems)
+                .WithOne(ci => ci.Cart)
+                .HasForeignKey(ci => ci.CartID);
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.FoodItem)
+                .WithMany(fi => fi.CartItems)
+                .HasForeignKey(ci => ci.FoodItemID);
         }
     }
 }
