@@ -11,6 +11,12 @@ namespace NET1041_ASM.Services
         {
             _dbContext = dbContext;
         }
+
+        public User GetByUsername(string username)
+        {
+            return _dbContext.Users.FirstOrDefault(u => u.Username == username);
+        }
+
         public bool Login(string username, string password)
         {
             var user = _dbContext.Users.SingleOrDefault(u => u.Username == username);
@@ -44,6 +50,12 @@ namespace NET1041_ASM.Services
             _dbContext.SaveChanges();
 
             return true;
+        }
+
+        public void Update(User user)
+        {
+            _dbContext.Users.Update(user);
+            _dbContext.SaveChanges();
         }
     }
 }

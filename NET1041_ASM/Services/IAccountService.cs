@@ -6,5 +6,7 @@ namespace NET1041_ASM.Services
     {
         bool Login(string username, string password);
         bool Register(User registerUser);
+        User GetByUsername(string username);
+        void Update(User user);
     }
 }
