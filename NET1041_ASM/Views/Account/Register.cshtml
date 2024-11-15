@@ -1,0 +1,55 @@
+﻿@model NET1041_ASM.Models.User
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!-- Register Start -->
+<div class="contact">
+    <div class="container">
+        <div class="section-header text-center">
+            <p>Register</p>
+            <h2>Register for an Account</h2>
+        </div>
+        <div class="row contact-form">
+            <div class="col-md-6 offset-md-3">
+                <div id="success"></div>
+                <form asp-action="Register" method="post" id="registerForm" novalidate="novalidate">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="control-group mb-3">
+                        <input asp-for="Username" class="form-control" placeholder="Username" required="required" data-validation-required-message="Please enter your username" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="control-group mb-3">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Password" required="required" data-validation-required-message="Please enter your password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="control-group mb-3">
+                        <input asp-for="Email" type="email" class="form-control" placeholder="Email" required="required" data-validation-required-message="Please enter your email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="control-group mb-3">
+                        <input asp-for="Phone" type="tel" class="form-control" placeholder="Phone" required="required" data-validation-required-message="Please enter your phone number" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                    <div class="control-group mb-3">
+                        <input asp-for="DateOfBirth" type="date" class="form-control" placeholder="Date of Birth" required="required" data-validation-required-message="Please enter your date of birth" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <button class="btn custom-btn" type="submit">Register</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <a asp-action="Index" asp-controller="Home" class="text-secondary">Back to Homepage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Register End -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

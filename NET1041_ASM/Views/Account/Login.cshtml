@@ -1,0 +1,42 @@
+﻿@model NET1041_ASM.Models.User
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<!-- Login Start -->
+<div class="contact">
+    <div class="container">
+        <div class="section-header text-center">
+            <p>Login</p>
+            <h2>Login to Your Account</h2>
+        </div>
+        <div class="row contact-form">
+            <div class="col-md-6 offset-md-3">
+                <div id="success"></div>
+                <form asp-action="Login" method="post" id="loginForm" novalidate="novalidate">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="control-group mb-3">
+                        <input asp-for="Username" class="form-control" placeholder="Username" required="required" data-validation-required-message="Please enter your username" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="control-group mb-3">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Password" required="required" data-validation-required-message="Please enter your password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <button class="btn custom-btn" type="submit">Login</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3"><a asp-action="Register" class="text-secondary">Create an Account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Login End -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
