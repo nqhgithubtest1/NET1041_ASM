@@ -19,37 +19,48 @@
                         </a>
                     }
                 </div>
-
-                <div class="filter-form p-4 mb-4 shadow-sm rounded">
+                <div class="filter-form p-4 mb-4 shadow-sm rounded bg-light-green">
                     <form method="get" asp-action="Index">
                         <input type="hidden" name="CategoryID" value="@Model.CategoryID" />
 
+                        <!-- Input Fields -->
+                        <h4 class="mb-3 text-green">Filter Foods</h4>
                         <div class="form-row mb-3">
-                            <div class="col-md-4">
-                                <input type="text" name="Keyword" class="form-control" placeholder="Search..." value="@Model.Keyword" />
+                            <!-- Keyword Search -->
+                            <div class="col-md-6 mb-3">
+                                <label for="Keyword" class="form-label font-weight-bold text-yellow">Search by Name/Description:</label>
+                                <input type="text" name="Keyword" id="Keyword" class="form-control border-yellow" placeholder="Enter keyword" value="@Model.Keyword" />
                             </div>
-                            <div class="col-md-4">
-                                <input type="number" name="PriceFrom" class="form-control" placeholder="Price From" value="@Model.PriceFrom" />
-                            </div>
-                            <div class="col-md-4">
-                                <input type="number" name="PriceTo" class="form-control" placeholder="Price To" value="@Model.PriceTo" />
+                            <!-- Price Range -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label font-weight-bold text-yellow">Price Range:</label>
+                                <div class="d-flex">
+                                    <input type="number" name="PriceFrom" class="form-control border-yellow mr-2" placeholder="Min Price" value="@Model.PriceFrom" />
+                                    <input type="number" name="PriceTo" class="form-control border-yellow" placeholder="Max Price" value="@Model.PriceTo" />
+                                </div>
                             </div>
                         </div>
 
+                        <!-- Sorting Options -->
                         <div class="form-row mb-3">
                             <div class="col-md-6">
-                                <label for="SortBy" class="form-label">Sort by:</label>
-                                @Html.DropDownList("SortBy", (IEnumerable<SelectListItem>)ViewBag.SortByOptions, "Select attribute to sort by", new { @class = "form-control", @id = "SortBy" })
+                                <label for="SortBy" class="form-label font-weight-bold text-yellow">Sort by:</label>
+                                @Html.DropDownList("SortBy", (IEnumerable<SelectListItem>)ViewBag.SortByOptions, "Select attribute to sort by", new { @class = "form-control border-yellow", @id = "SortBy" })
                             </div>
                             <div class="col-md-6">
-                                <label for="SortOrder" class="form-label">Order:</label>
-                                @Html.DropDownList("SortOrder", (IEnumerable<SelectListItem>)ViewBag.SortOrderOptions, "Select order", new { @class = "form-control", @id = "SortOrder" })
+                                <label for="SortOrder" class="form-label font-weight-bold text-yellow">Sort Order:</label>
+                                @Html.DropDownList("SortOrder", (IEnumerable<SelectListItem>)ViewBag.SortOrderOptions, "Select order", new { @class = "form-control border-yellow", @id = "SortOrder" })
                             </div>
                         </div>
 
+                        <!-- Buttons -->
                         <div class="text-center">
-                            <button type="submit" class="btn btn-success px-4">Filter</button>
-                            <a asp-action="Index" type="submit" class="btn btn-secondary">Clear</a>
+                            <button type="submit" class="btn btn-yellow text-white px-4 shadow-sm mr-2">
+                                <i class="fa fa-filter"></i> Apply Filters
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary px-4 shadow-sm">
+                                <i class="fa fa-redo"></i> Clear Filters
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -101,6 +112,59 @@
 }
 
 <!-- Custom CSS -->
+@* paging *@
+<style>
+    .pagination .page-item .page-link {
+        color: #6ab04c; /* Green */
+        border: 1px solid #ffc107; /* Yellow border */
+        background-color: #f9fff4; /* Light green */
+        transition: all 0.3s ease;
+    }
+
+    .pagination .page-item.active .page-link {
+        color: #fff; /* White text */
+        background-color: #ffc107; /* Yellow background */
+        border-color: #ffc107; /* Yellow border */
+    }
+
+    .pagination .page-link:hover {
+        background-color: #e6a700; /* Darker yellow on hover */
+        color: #fff; /* White text */
+    }
+
+    .pagination .page-item {
+        margin: 0 5px; /* Add spacing between items */
+    }
+</style>
+@* filter *@
+<style>
+    .bg-light-green {
+        background-color: #f9fff4; /* Light green */
+    }
+
+    .text-green {
+        color: #6ab04c; /* Green */
+    }
+
+    .text-yellow {
+        color: #ffc107; /* Yellow */
+    }
+
+    .btn-yellow {
+        background-color: #ffc107;
+        color: #fff;
+        border: none;
+    }
+
+        .btn-yellow:hover {
+            background-color: #e6a700;
+        }
+
+    .thead-yellow {
+        background-color: #ffc107;
+        color: #fff;
+    }
+</style>
 <style>
     .category-filter .btn {
         margin: 5px;
@@ -109,71 +173,6 @@
         .category-filter .btn.active {
             background-color: #28a745;
             color: white;
-            border-color: #28a745;
-        }
-
-    .filter-form {
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-    }
-
-        .filter-form input,
-        .filter-form .form-control {
-            border-radius: 5px;
-            border: 1px solid #ced4da;
-        }
-
-        .filter-form .form-label {
-            font-weight: bold;
-            color: #6c757d;
-        }
-
-        .filter-form .btn-success {
-            background-color: #28a745;
-            border-color: #28a745;
-            font-weight: bold;
-        }
-
-            .filter-form .btn-success:hover {
-                background-color: #218838;
-                border-color: #1e7e34;
-            }
-
-        .filter-form .text-center {
-            margin-top: 10px;
-        }
-
-    .pagination {
-        margin-top: 20px;
-    }
-
-        .pagination .page-item {
-            margin: 0 5px;
-        }
-
-        .pagination .page-link {
-            color: #28a745;
-            background-color: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-            .pagination .page-link:hover {
-                color: #fff;
-                background-color: #28a745;
-                border-color: #28a745;
-            }
-
-        .pagination .page-item.active .page-link {
-            color: #fff;
-            background-color: #28a745;
             border-color: #28a745;
         }
 
