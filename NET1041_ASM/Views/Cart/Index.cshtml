@@ -48,7 +48,7 @@
                             }
                             <td>@subtotal.ToString("N0") VND</td>
                             <td>
-                                <form asp-action="Remove" asp-controller="Cart" method="post">
+                                <form asp-action="Remove" asp-controller="Cart" method="post" data-confirm="Are you sure you want to remove this item?">
                                     <input type="hidden" name="CartItemID" value="@item.CartItemID" />
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="fa fa-trash"></i> Remove

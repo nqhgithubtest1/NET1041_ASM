@@ -159,6 +159,37 @@
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const forms = document.querySelectorAll("form[data-confirm]");
+
+            forms.forEach(form => {
+                form.addEventListener("submit", (e) => {
+                    e.preventDefault();
+
+                    const confirmMessage = form.getAttribute("data-confirm");
+
+                    // Show SweetAlert2 confirm box
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: confirmMessage,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, proceed!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
     <!-- Render the Scripts section if it exists -->
     @RenderSection("Scripts", required: false)
 </body>
