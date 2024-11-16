@@ -12,7 +12,19 @@
         </div>
         <div class="row contact-form">
             <div class="col-md-6 offset-md-3">
-                <div id="success"></div>
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
                 <form asp-action="Profile" method="post" id="registerForm" novalidate="novalidate">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="control-group mb-3">
@@ -50,6 +62,7 @@
         </div>
     </div>
 </div>
+
 <!-- Register End -->
 @section Scripts {
     @{

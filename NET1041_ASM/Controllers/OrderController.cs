@@ -21,17 +21,12 @@ namespace NET1041_ASM.Controllers
                 var orderId = _orderService.CreateOrder(userId);
 
                 TempData["SuccessMessage"] = $"Order #{orderId} has been successfully placed!";
-                return RedirectToAction("Details", "Order", new { id = orderId });
+                return RedirectToAction("Details", new { id = orderId });
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction("Index", "Cart");
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "An error occurred while placing the order.";
-                return RedirectToAction("Index", "Cart");
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
             }
         }
 
@@ -40,17 +35,18 @@ namespace NET1041_ASM.Controllers
             try
             {
                 var order = _orderService.GetOrderDetails(id);
+
+                if (order == null)
+                {
+                    throw new KeyNotFoundException($"Order with ID {id} not found.");
+                }
+
                 return View(order);
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction("Index", "Home");
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "An error occurred while fetching order details.";
-                return RedirectToAction("Index", "Home");
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
             }
         }
 
@@ -68,10 +64,10 @@ namespace NET1041_ASM.Controllers
 
                 return View(orders);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An error occurred while fetching order history.";
-                return RedirectToAction("Index", "Food");
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
             }
         }
 
@@ -86,8 +82,8 @@ namespace NET1041_ASM.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction("Details", new { id = orderId });
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
             }
         }
     }

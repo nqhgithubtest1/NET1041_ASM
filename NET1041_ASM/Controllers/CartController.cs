@@ -10,6 +10,7 @@ namespace NET1041_ASM.Controllers
     {
         private readonly ICartService _cartService;
         private readonly IFoodService _foodService;
+
         public CartController(ICartService cartService, IFoodService foodService)
         {
             _cartService = cartService;
@@ -18,15 +19,23 @@ namespace NET1041_ASM.Controllers
 
         public IActionResult Index()
         {
-            var userId = int.Parse(HttpContext.Session.GetString("UserID"));
-            var userCart = _cartService.GetByUserID(userId);
-
-            if (userCart == null || userCart.CartItems.Count == 0)
+            try
             {
-                ViewBag.Message = "Your cart is empty.";
-            }
+                var userId = int.Parse(HttpContext.Session.GetString("UserID"));
+                var userCart = _cartService.GetByUserID(userId);
 
-            return View(userCart);
+                if (userCart == null || userCart.CartItems.Count == 0)
+                {
+                    ViewBag.Message = "Your cart is empty.";
+                }
+
+                return View(userCart);
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
+            }
         }
 
         [HttpPost]
@@ -36,19 +45,12 @@ namespace NET1041_ASM.Controllers
             {
                 var userId = int.Parse(HttpContext.Session.GetString("UserID"));
                 _cartService.AddToCart(userId, foodItemId, quantity);
-                return RedirectToAction("Index", "Cart");
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
             }
         }
 
@@ -59,19 +61,12 @@ namespace NET1041_ASM.Controllers
             {
                 var userId = int.Parse(HttpContext.Session.GetString("UserID"));
                 _cartService.AddComboToCart(userId, comboId, quantity);
-                return RedirectToAction("Index", "Cart");
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
             }
         }
 
@@ -83,13 +78,10 @@ namespace NET1041_ASM.Controllers
                 _cartService.RemoveCartItem(CartItemID);
                 return RedirectToAction("Index");
             }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
             }
         }
 
@@ -101,17 +93,10 @@ namespace NET1041_ASM.Controllers
                 _cartService.UpdateCartItemQuantity(CartItemID, Quantity);
                 return RedirectToAction("Index");
             }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
             }
         }
     }

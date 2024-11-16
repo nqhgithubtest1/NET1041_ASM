@@ -7,6 +7,7 @@ namespace NET1041_ASM.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
@@ -20,12 +21,21 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult Register([FromForm] User registerUser)
         {
-            if (!_accountService.Register(registerUser))
+            try
             {
-                return View(registerUser);
-            }
+                if (!_accountService.Register(registerUser))
+                {
+                    ModelState.AddModelError("", "Registration failed. Please try again.");
+                    return View(registerUser);
+                }
 
-            return View("Login");
+                return View("Login");
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
+            }
         }
 
         public IActionResult Login()
@@ -36,25 +46,42 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult Login([FromForm] User loginUser)
         {
-            if (!_accountService.Login(loginUser.Username, loginUser.Password))
+            try
             {
-                return View(loginUser);
+                if (!_accountService.Login(loginUser.Username, loginUser.Password))
+                {
+                    ModelState.AddModelError("", "Invalid username or password.");
+                    return View(loginUser);
+                }
+
+                loginUser = _accountService.GetByUsername(loginUser.Username);
+
+                HttpContext.Session.SetString("Username", loginUser.Username);
+                HttpContext.Session.SetString("UserID", loginUser.UserID.ToString());
+                HttpContext.Session.SetString("UserRole", loginUser.Role);
+
+                return RedirectToAction("Index", "Food");
             }
-
-            loginUser = _accountService.GetByUsername(loginUser.Username);
-
-            HttpContext.Session.SetString("Username", loginUser.Username);
-            HttpContext.Session.SetString("UserID", loginUser.UserID.ToString());
-            HttpContext.Session.SetString("UserRole", loginUser.Role);
-
-            return RedirectToAction("Index", "Food");
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
+            }
         }
 
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("Username");
-            HttpContext.Session.Remove("UserRole");
-            return RedirectToAction("Index", "Food");
+            try
+            {
+                HttpContext.Session.Remove("Username");
+                HttpContext.Session.Remove("UserRole");
+                return RedirectToAction("Index", "Food");
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("Error", "Shared");
+            }
         }
     }
 }
