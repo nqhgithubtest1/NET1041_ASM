@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NET1041_ASM.Context;
 
@@ -11,9 +12,11 @@ using NET1041_ASM.Context;
 namespace NET1041_ASM.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241116075305_updatedb7")]
+    partial class updatedb7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,6 +61,9 @@ namespace NET1041_ASM.Migrations
                     b.Property<int?>("ComboID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ComboID1")
+                        .HasColumnType("int");
+
                     b.Property<int?>("FoodItemID")
                         .HasColumnType("int");
 
@@ -72,6 +78,8 @@ namespace NET1041_ASM.Migrations
                     b.HasIndex("CartID");
 
                     b.HasIndex("ComboID");
+
+                    b.HasIndex("ComboID1");
 
                     b.HasIndex("FoodItemID");
 
@@ -203,12 +211,13 @@ namespace NET1041_ASM.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderID"));
 
-                    b.Property<DateTime>("OrderTime")
+                    b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
+                    b.Property<string>("Status")
+                        .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
@@ -318,8 +327,12 @@ namespace NET1041_ASM.Migrations
                         .IsRequired();
 
                     b.HasOne("NET1041_ASM.Models.Combo", "Combo")
-                        .WithMany("CartItems")
+                        .WithMany()
                         .HasForeignKey("ComboID");
+
+                    b.HasOne("NET1041_ASM.Models.Combo", null)
+                        .WithMany("CartItems")
+                        .HasForeignKey("ComboID1");
 
                     b.HasOne("NET1041_ASM.Models.FoodItem", "FoodItem")
                         .WithMany("CartItems")

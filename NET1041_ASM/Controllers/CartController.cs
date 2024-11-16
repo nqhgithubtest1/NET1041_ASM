@@ -53,6 +53,29 @@ namespace NET1041_ASM.Controllers
         }
 
         [HttpPost]
+        public IActionResult AddComboToCart(int comboId, int quantity)
+        {
+            try
+            {
+                var userId = int.Parse(HttpContext.Session.GetString("UserID"));
+                _cartService.AddComboToCart(userId, comboId, quantity);
+                return RedirectToAction("Index", "Cart");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+        [HttpPost]
         public IActionResult Remove(int CartItemID)
         {
             try

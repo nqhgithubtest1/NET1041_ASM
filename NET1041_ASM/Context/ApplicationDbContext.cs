@@ -66,6 +66,11 @@ namespace NET1041_ASM.Context
                 .HasOne(ci => ci.FoodItem)
                 .WithMany(fi => fi.CartItems)
                 .HasForeignKey(ci => ci.FoodItemID);
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Combo)
+                .WithMany(c => c.CartItems)
+                .HasForeignKey(ci => ci.ComboID);
         }
     }
 }

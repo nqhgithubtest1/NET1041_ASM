@@ -1,0 +1,72 @@
+﻿@model List<Order>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Order History</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            <strong>You have no orders yet!</strong> <a href="@Url.Action("Index", "Food")" class="alert-link">Start shopping now</a>.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Order ID</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                    <th>Total Amount</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.OrderID</td>
+                        <td>@order.OrderTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>
+                            <span class="badge
+                                @(order.Status == OrderStatus.Pending ? "badge-pending" :
+                                  order.Status == OrderStatus.Shipping ? "badge-shipping" :
+                                  order.Status == OrderStatus.Completed ? "badge-completed" :
+                                  order.Status == OrderStatus.Cancelled ? "badge-cancelled" : "")">
+                                @order.Status
+                            </span>
+                        </td>
+                        <td>@order.TotalAmount.ToString("N0") VND</td>
+                        <td>
+                            <a href="@Url.Action("Details", "Order", new { id = order.OrderID })" class="btn btn-secondary btn-sm">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<style>
+    .badge-pending {
+        background-color: #ffc107; /* Yellow */
+        color: #fff;
+    }
+
+    .badge-shipping {
+        background-color: #17a2b8; /* Blue */
+        color: #fff;
+    }
+
+    .badge-completed {
+        background-color: #28a745; /* Green */
+        color: #fff;
+    }
+
+    .badge-cancelled {
+        background-color: #dc3545; /* Red */
+        color: #fff;
+    }
+</style>

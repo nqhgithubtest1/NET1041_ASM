@@ -11,6 +11,22 @@
             <p><strong>Description:</strong> @Model.Description</p>
             <p><strong>Availability:</strong> @(Model.IsAvailable ? "Available" : "Not Available")</p>
             <p><strong>Created Date:</strong> @Model.CreatedDate.ToString("dd/MM/yyyy")</p>
+            @{
+                var userRole = HttpContextAccessor.HttpContext.Session.GetString("UserRole");
+            }
+            @if (userRole != null && userRole.ToString() == "customer")
+            {
+                <form asp-action="AddComboToCart" asp-controller="Cart" method="post" class="mt-4">
+                    <input type="hidden" name="ComboID" value="@Model.ComboID" />
+                    <div class="form-group">
+                        <label for="Quantity">Quantity:</label>
+                        <input type="number" name="Quantity" id="Quantity" class="form-control" min="1" value="1" required />
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-cart-plus"></i> Add to Cart
+                    </button>
+                </form>
+            }
         </div>
     </div>
 

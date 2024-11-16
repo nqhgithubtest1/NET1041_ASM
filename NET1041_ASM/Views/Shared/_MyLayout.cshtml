@@ -62,7 +62,7 @@
                         var cartItemCount = cartItems.Sum(i => i.Quantity);
 
                         <a href="@Url.Action("Profile", "Customer")" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "active" : "")">Profile</a>
-                        <a href="@Url.Action("OrderHistory", "Order")" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "OrderHistory" ? "active" : "")">Order History</a>
+                        <a href="@Url.Action("History", "Order")" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "OrderHistory" ? "active" : "")">Order History</a>
                         <a href="@Url.Action("Index", "Cart")" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Cart" ? "active" : "")">Cart (@cartItemCount)</a>
                         <a href="@Url.Action("Logout", "Account")" class="nav-item nav-link">Logout</a>
                     }

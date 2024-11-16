@@ -24,5 +24,6 @@ namespace NET1041_ASM.Models
         // Lazy loading
         public virtual ICollection<ComboFoodItem> ComboFoodItems { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
     }
 }

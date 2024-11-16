@@ -12,7 +12,7 @@ namespace NET1041_ASM.Models
         [Range(0, 100000)]
         public decimal Price { get; set; }
 
-        // Quan hệ
+        // Relationship
         public int OrderID { get; set; }
         public virtual Order Order { get; set; }
         public int? FoodItemID { get; set; }
