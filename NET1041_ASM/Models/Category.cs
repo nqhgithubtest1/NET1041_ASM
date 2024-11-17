@@ -11,6 +11,7 @@ namespace NET1041_ASM.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
+        public bool IsActive { get; set; } = true;
 
         // Lazy loading
         public virtual ICollection<FoodItem> FoodItems { get; set; }

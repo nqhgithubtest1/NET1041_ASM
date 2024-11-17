@@ -11,16 +11,16 @@ namespace NET1041_ASM.Models
         [MaxLength(200)]
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        [Range(0, 100000)]
+        [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
         public bool IsAvailable { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        [MaxLength(500)]
+        [MaxLength(5000)]
         public string ImagePath { get; set; }
 
         // Relationship
