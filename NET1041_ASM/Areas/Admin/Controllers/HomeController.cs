@@ -7,6 +7,14 @@ namespace NET1041_ASM.Areas.Admin.Controllers
     {
         public IActionResult Index()
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "admin")
+            {
+                ViewData["ErrorMessage"] = "You do not have admin permission to access this page.";
+                return View("Error", "Shared");
+            }
+
             return View();
         }
     }

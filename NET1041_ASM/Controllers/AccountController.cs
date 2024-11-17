@@ -81,19 +81,12 @@ namespace NET1041_ASM.Controllers
 
         public IActionResult Logout()
         {
-            var userRole = HttpContext.Session.GetString("UserRole");
-
-            if (userRole != "customer")
-            {
-                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
-                return RedirectToAction("Login", "Account");
-            }
-
             try
             {
                 HttpContext.Session.Remove("Username");
+                HttpContext.Session.Remove("UserID");
                 HttpContext.Session.Remove("UserRole");
-                return RedirectToAction("Index", "Food");
+                return RedirectToAction("Login", "Account");
             }
             catch (Exception ex)
             {
