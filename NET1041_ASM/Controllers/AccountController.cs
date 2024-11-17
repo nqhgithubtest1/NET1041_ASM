@@ -60,7 +60,17 @@ namespace NET1041_ASM.Controllers
                 HttpContext.Session.SetString("UserID", loginUser.UserID.ToString());
                 HttpContext.Session.SetString("UserRole", loginUser.Role);
 
-                return RedirectToAction("Index", "Food");
+                if (loginUser.Role == "customer")
+                {
+                    return RedirectToAction("Index", "Food");
+                }
+                if (loginUser.Role == "admin")
+                {
+                    return Redirect("/Admin/Home/Index");
+                }
+
+                TempData["ErrorMessage"] = "Something happening.";
+                return View(loginUser);
             }
             catch (Exception ex)
             {
