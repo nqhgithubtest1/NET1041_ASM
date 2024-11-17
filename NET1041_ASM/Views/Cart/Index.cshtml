@@ -101,9 +101,11 @@
             <a href="@Url.Action("Index", "Food")" class="btn btn-secondary">
                 <i class="fa fa-arrow-left"></i> Continue Shopping
             </a>
-            <a href="@Url.Action("Order", "Order")" class="btn btn-success">
-                <i class="fa fa-credit-card"></i> Order
-            </a>
+            <form action="@Url.Action("Order", "Order")" method="post" data-confirm="Do you want to place this order?">
+                <button type="submit" class="btn btn-success">
+                    <i class="fa fa-credit-card"></i> Order
+                </button>
+            </form>
         </div>
     }
 </div>

@@ -15,8 +15,17 @@ namespace NET1041_ASM.Controllers
             _orderService = orderService;
         }
 
+        [HttpPost]
         public IActionResult Order()
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 var userId = int.Parse(HttpContext.Session.GetString("UserID"));
@@ -34,9 +43,22 @@ namespace NET1041_ASM.Controllers
 
         public IActionResult Details(int id)
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 var order = _orderService.GetOrderDetails(id);
+
+                if (!username.Equals(order.User.Username))
+                {
+                    throw new Exception($"You do not have permission to access the order with ID #{id}.");
+                }
 
                 if (order == null)
                 {
@@ -54,6 +76,14 @@ namespace NET1041_ASM.Controllers
 
         public IActionResult History([FromQuery] OrderFilterViewModel filter)
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             ViewBag.StatusOptions = Enum.GetValues(typeof(OrderStatus))
                 .Cast<OrderStatus>()
                 .Select(s => new SelectListItem
@@ -142,6 +172,14 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult Cancel(int orderId)
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 _orderService.CancelOrder(orderId);

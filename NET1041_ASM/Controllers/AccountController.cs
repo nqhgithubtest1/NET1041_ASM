@@ -25,7 +25,7 @@ namespace NET1041_ASM.Controllers
             {
                 if (!_accountService.Register(registerUser))
                 {
-                    ModelState.AddModelError("", "Registration failed. Please try again.");
+                    TempData["ErrorMessage"] = "Registration failed. Please try again.";
                     return View(registerUser);
                 }
 
@@ -33,8 +33,8 @@ namespace NET1041_ASM.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["ErrorMessage"] = ex.Message;
-                return View("Error", "Shared");
+                TempData["ErrorMessage"] = ex.Message;
+                return View(registerUser);
             }
         }
 
@@ -50,7 +50,7 @@ namespace NET1041_ASM.Controllers
             {
                 if (!_accountService.Login(loginUser.Username, loginUser.Password))
                 {
-                    ModelState.AddModelError("", "Invalid username or password.");
+                    TempData["ErrorMessage"] = "Invalid username or password.";
                     return View(loginUser);
                 }
 
@@ -64,13 +64,21 @@ namespace NET1041_ASM.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["ErrorMessage"] = ex.Message;
-                return View("Error", "Shared");
+                TempData["ErrorMessage"] = ex.Message;
+                return View(loginUser);
             }
         }
 
         public IActionResult Logout()
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 HttpContext.Session.Remove("Username");

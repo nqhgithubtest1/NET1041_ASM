@@ -19,6 +19,14 @@ namespace NET1041_ASM.Controllers
 
         public IActionResult Index()
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 var userId = int.Parse(HttpContext.Session.GetString("UserID"));
@@ -41,6 +49,14 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult AddToCart(int foodItemId, int quantity)
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 var userId = int.Parse(HttpContext.Session.GetString("UserID"));
@@ -57,6 +73,14 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult AddComboToCart(int comboId, int quantity)
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 var userId = int.Parse(HttpContext.Session.GetString("UserID"));
@@ -73,6 +97,14 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult Remove(int CartItemID)
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 _cartService.RemoveCartItem(CartItemID);
@@ -88,6 +120,14 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult UpdateQuantity(int CartItemID, int Quantity)
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 _cartService.UpdateCartItemQuantity(CartItemID, Quantity);

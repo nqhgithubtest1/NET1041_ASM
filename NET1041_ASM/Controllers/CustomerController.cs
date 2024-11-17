@@ -16,16 +16,16 @@ namespace NET1041_ASM.Controllers
 
         public IActionResult Profile()
         {
+            var username = HttpContext.Session.GetString("Username");
+
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["ErrorMessage"] = "Please login with customer account to access this page.";
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
-                var username = HttpContext.Session.GetString("Username");
-
-                if (string.IsNullOrEmpty(username))
-                {
-                    ViewData["ErrorMessage"] = "You must be logged in to access the profile.";
-                    return View("Error");
-                }
-
                 var user = _accountService.GetByUsername(username);
 
                 if (user == null)

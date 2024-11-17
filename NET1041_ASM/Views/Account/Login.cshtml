@@ -13,6 +13,19 @@
         </div>
         <div class="row contact-form">
             <div class="col-md-6 offset-md-3">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
                 <div id="success"></div>
                 <form asp-action="Login" method="post" id="loginForm" novalidate="novalidate">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
