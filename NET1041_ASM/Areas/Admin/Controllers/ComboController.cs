@@ -181,9 +181,9 @@ namespace NET1041_ASM.Areas.Admin.Controllers
                     var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/combos", newFileName);
 
                     // Delete old file if it exists
-                    if (!string.IsNullOrEmpty(combo.ImagePath))
+                    if (!string.IsNullOrEmpty(currentCombo.ImagePath))
                     {
-                        var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", combo.ImagePath.TrimStart('/'));
+                        var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", currentCombo.ImagePath.TrimStart('/'));
                         if (System.IO.File.Exists(oldFilePath))
                         {
                             System.IO.File.Delete(oldFilePath);
@@ -201,9 +201,11 @@ namespace NET1041_ASM.Areas.Admin.Controllers
                 }
                 else
                 {
+                    // Retain the old image path if no new file is uploaded
                     combo.ImagePath = currentCombo.ImagePath;
                 }
 
+                // Update the combo in the database
                 _comboService.Update(combo);
 
                 TempData["SuccessMessage"] = "Combo updated successfully!";

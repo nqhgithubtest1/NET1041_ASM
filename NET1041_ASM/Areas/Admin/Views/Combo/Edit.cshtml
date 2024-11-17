@@ -64,6 +64,10 @@
                 <!-- Food Items in Combo -->
                 <div class="mb-3" style="max-height: 500px; overflow-y: auto;">
                     <label class="form-label">Select Foods for Combo</label>
+                    <div class="mb-3">
+                        <label class="form-label">Total Price of Selected Foods</label>
+                        <input type="text" id="TotalPrice" class="form-control" value="0 VND" readonly />
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -96,7 +100,7 @@
                                     </td>
                                     <td>
                                         <input type="hidden" name="ComboFoodItems[@i].FoodItemID" value="@food.FoodItemID" />
-                                        <input type="checkbox" class="food-checkbox" onchange="toggleQuantity(this)" @(isSelected ? "checked" : "") />
+                                        <input type="checkbox" class="food-checkbox" data-price="@food.Price" onchange="toggleQuantity(this)" @(isSelected ? "checked" : "") />
                                     </td>
                                 </tr>
                             }
@@ -132,4 +136,46 @@
             quantityInput.value = ''; // Clear value if unchecked
         }
     }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Update total price whenever a checkbox or quantity is changed
+        const checkboxes = document.querySelectorAll('.food-checkbox');
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        const totalPriceInput = document.getElementById('TotalPrice');
+
+        function updateTotalPrice() {
+            let total = 0;
+
+            checkboxes.forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    const quantity = parseInt(quantityInputs[index].value) || 0;
+                    const price = parseInt(checkbox.dataset.price) || 0;
+                    total += quantity * price;
+                }
+            });
+
+            // Update the total price field
+            totalPriceInput.value = total.toLocaleString('vi-VN') + " VND";
+        }
+
+        // Attach event listeners
+        checkboxes.forEach((checkbox, index) => {
+            checkbox.addEventListener('change', function () {
+                const quantityInput = quantityInputs[index];
+                quantityInput.disabled = !this.checked; // Enable/disable quantity input
+                if (!this.checked) {
+                    quantityInput.value = ''; // Clear quantity if unchecked
+                }
+                updateTotalPrice();
+            });
+        });
+
+        quantityInputs.forEach(input => {
+            input.addEventListener('input', updateTotalPrice);
+        });
+
+        // Initialize total price on page load
+        updateTotalPrice();
+    });
 </script>
