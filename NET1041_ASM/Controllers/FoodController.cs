@@ -25,7 +25,7 @@ namespace NET1041_ASM.Controllers
 
                 ViewBag.Categories = _categoryService.GetAll();
 
-                var query = _foodService.GetAll().AsQueryable();
+                var query = _foodService.GetAll().Where(f => f.IsAvailable == true).AsQueryable();
 
                 if (filter.CategoryID.HasValue)
                 {
@@ -94,7 +94,7 @@ namespace NET1041_ASM.Controllers
             {
                 var foodItem = _foodService.GetById(id);
 
-                if (foodItem == null)
+                if (foodItem == null || foodItem.IsAvailable == false)
                 {
                     ViewData["ErrorMessage"] = $"Food item with ID {id} not found.";
                     return View("Error");

@@ -1,0 +1,125 @@
+﻿@using NET1041_ASM.Models
+@model Combo
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">Admin/</span> Combo Management
+    </h4>
+
+    <div class="card">
+        <h5 class="card-header">Create New Combo</h5>
+        <div class="card-body">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            <form asp-area="Admin" asp-action="Create" asp-controller="Combo" method="post" data-confirm="Are you sure you want to do that?" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter combo name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label"></label>
+                    <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="Enter price" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="ImageFile" class="form-label">Upload Image</label>
+                    <input type="file" class="form-control" id="ImageFile" name="imageFile" accept="image/*" />
+                </div>
+
+                <!-- Food Items in Combo -->
+                <div class="mb-3" style="max-height: 500px; overflow-y: auto;">
+                    <label class="form-label">Select Foods for Combo</label>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < ((List<FoodItem>)ViewBag.FoodItems).Count; i++)
+                            {
+                                var food = ((List<FoodItem>)ViewBag.FoodItems)[i];
+                                <tr>
+                                    <td>@food.FoodItemID</td>
+                                    <td>
+                                        <img src="/@food.ImagePath" alt="Food Image" class="rounded" style="width: 50px; height: 50px;" />
+                                    </td>
+                                    <td>@food.Name</td>
+                                    <td>@food.Category.Name</td>
+                                    <td>@food.Price.ToString("N0") VND</td>
+                                    <td>
+                                        <input type="number" name="ComboFoodItems[@i].Quantity" class="form-control quantity-input" min="1" placeholder="Qty" disabled />
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="ComboFoodItems[@i].FoodItemID" value="@food.FoodItemID" />
+                                        <input type="checkbox" class="food-checkbox" onchange="toggleQuantity(this)" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="IsAvailable" class="form-label">Status</label>
+                    <div class="form-check">
+                        <input asp-for="IsAvailable" class="form-check-input" type="radio" value="true" checked />
+                        <label class="form-check-label">Active</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="IsAvailable" class="form-check-input" type="radio" value="false" />
+                        <label class="form-check-label">Inactive</label>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleQuantity(checkbox) {
+        const quantityInput = checkbox.closest('tr').querySelector('.quantity-input');
+        quantityInput.disabled = !checkbox.checked; // Enable/disable input based on checkbox status
+        if (!checkbox.checked) {
+            quantityInput.value = ''; // Clear value if unchecked
+        }
+    }
+
+    function filterUnselected() {
+        document.querySelectorAll('.food-checkbox').forEach(checkbox => {
+            if (!checkbox.checked) {
+                const row = checkbox.closest('tr');
+                row.querySelectorAll('input').forEach(input => {
+                    input.disabled = true; // Disable unselected inputs
+                });
+            }
+        });
+    }
+</script>

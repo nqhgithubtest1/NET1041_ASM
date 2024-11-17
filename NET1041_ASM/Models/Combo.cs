@@ -12,11 +12,11 @@ namespace NET1041_ASM.Models
 
         public string Description { get; set; }
 
-        [Range(0, 100000)]
+        [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        [MaxLength(200)]
+        [MaxLength(2000)]
         public string ImagePath { get; set; }
 
         public bool IsAvailable { get; set; }

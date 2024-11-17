@@ -20,7 +20,7 @@ namespace NET1041_ASM.Controllers
             {
                 ViewData["PageTitle"] = "Combo Menu";
 
-                var query = _comboService.GetAllCombos().AsQueryable();
+                var query = _comboService.GetAllCombos().Where(cb => cb.IsAvailable == true).AsQueryable();
 
                 ViewBag.SortByOptions = new List<SelectListItem>
                 {
@@ -87,7 +87,7 @@ namespace NET1041_ASM.Controllers
             {
                 var combo = _comboService.GetById(id);
 
-                if (combo == null)
+                if (combo == null || combo.IsAvailable == false)
                 {
                     throw new KeyNotFoundException($"Combo with ID {id} not found.");
                 }
