@@ -1,0 +1,171 @@
+﻿@using NET1041_ASM.Areas.Admin.Models
+@model AccountFilterViewModel
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Admin/</span> Accounts Management</h4>
+
+    <form method="get" asp-action="Index" class="mb-4 p-3 shadow-sm rounded bg-light">
+        <div class="row">
+            <!-- Keyword Search -->
+            <div class="col-md-6 mb-3">
+                <label for="Keyword" class="form-label font-weight-bold text-yellow">Search:</label>
+                <input type="text" name="Keyword" class="form-control" placeholder="Search by username, email, phone"
+                       value="@Model.Keyword" />
+            </div>
+
+            <!-- Filter by Role -->
+            <div class="col-md-6 mb-3">
+                <label for="Role" class="form-label font-weight-bold text-yellow">Role:</label>
+                @Html.DropDownList("Role",
+                         new SelectList((IEnumerable<SelectListItem>)ViewBag.RoleOptions, "Value", "Text", Model.Role),
+                         "Select Role",
+                         new { @class = "form-control", @id = "Role" })
+            </div>
+        </div>
+        <div class="row">
+            <!-- Filter by Status -->
+            <div class="col-md-6 mb-3">
+                <label for="IsActive" class="form-label font-weight-bold text-yellow">Status:</label>
+                @Html.DropDownList("IsActive",
+                         new SelectList((IEnumerable<SelectListItem>)ViewBag.StatusOptions, "Value", "Text", Model.IsActive),
+                         "Select status",
+                         new { @class = "form-control", @id = "IsActive" })
+            </div>
+
+            <!-- Sorting Options -->
+            <div class="col-md-6 mb-3">
+                <label for="SortBy" class="form-label font-weight-bold text-yellow">Sort by:</label>
+                @Html.DropDownList("SortBy",
+                         (IEnumerable<SelectListItem>)ViewBag.SortByOptions,
+                         "Select attribute to sort by",
+                         new { @class = "form-control border-yellow", @id = "SortBy" })
+            </div>
+        </div>
+        <div class="row">
+            <!-- Sort Order -->
+            <div class="col-md-6 mb-3">
+                <label for="SortOrder" class="form-label font-weight-bold text-yellow">Sort Order:</label>
+                @Html.DropDownList("SortOrder",
+                         (IEnumerable<SelectListItem>)ViewBag.SortOrderOptions,
+                         "Select order",
+                         new { @class = "form-control border-yellow", @id = "SortOrder" })
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="d-flex justify-content-end mt-3">
+            <button type="submit" class="btn btn-primary me-2">
+                <i class="fa fa-filter"></i> Filter
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fa fa-redo"></i> Clear
+            </a>
+        </div>
+    </form>
+
+    <div class="text-end mb-4">
+        <a href="/Admin/Account/Create" class="btn btn-primary">
+            <i class="bx bx-plus me-1"></i> Create New User
+        </a>
+    </div>
+    <div class="card">
+        <div class="table-responsive text-nowrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var user in Model.Accounts)
+                    {
+                        <tr>
+                            <td>@user.UserID</td>
+                            <td>@user.Username</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <span class="badge bg-label-@(user.Role == "admin" ? "primary" : "info") me-1">
+                                    @user.Role
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-label-@(user.IsActive ? "success" : "danger") me-1">
+                                    @(user.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="@Url.Action("Edit", "Account", new { id = user.UserID })">
+                                            <i class="bx bx-edit-alt me-1"></i> Edit
+                                        </a>
+                                        @if (user.UserID != ViewBag.CurrentAdminId)
+                                        {
+                                            @if (user.IsActive)
+                                            {
+                                                <form asp-area="Admin" asp-controller="Account" asp-action="Deactive" method="post"
+                                                      data-confirm="Are you sure you want to deactivate this user?">
+                                                    <input type="hidden" name="id" value="@user.UserID" />
+                                                    <button type="submit" class="dropdown-item text-danger">
+                                                        <i class="bx bx-trash me-1"></i> Deactivate
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-area="Admin" asp-controller="Account" asp-action="Active" method="post"
+                                                      data-confirm="Are you sure you want to activate this user?">
+                                                    <input type="hidden" name="id" value="@user.UserID" />
+                                                    <button type="submit" class="dropdown-item text-success">
+                                                        <i class="bx bx-check-circle me-1"></i> Activate
+                                                    </button>
+                                                </form>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+            </table>
+            <!-- Pagination -->
+            @if (ViewBag.TotalPages > 1)
+            {
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i, Model.Keyword, Model.IsActive, Model.Role, Model.SortBy, Model.SortOrder })">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
+</div>

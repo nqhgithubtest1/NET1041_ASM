@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NET1041_ASM.Areas.Admin.Services;
 using NET1041_ASM.Context;
 using NET1041_ASM.Services;
 
@@ -20,12 +21,16 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// services for customers
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IComboService, ComboService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+
+// services for admins
+builder.Services.AddScoped<IAdminAccountService, AdminAccountService>();
 
 var app = builder.Build();
 
@@ -47,11 +52,11 @@ app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Food}/{action=Index}/{id?}");
-
-app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Food}/{action=Index}/{id?}");
 
 app.Run();
