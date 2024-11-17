@@ -19,6 +19,14 @@ namespace NET1041_ASM.Areas.Admin.Controllers
 
         public IActionResult Index([FromQuery] AccountFilterViewModel filter)
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "admin")
+            {
+                ViewData["ErrorMessage"] = "You do not have admin permission to access this page.";
+                return View("Error", "Shared");
+            }
+
             ViewBag.CurrentAdminId = int.Parse(HttpContext.Session.GetString("UserID"));
             var query = _accountService.GetAllUsers().AsQueryable();
             if (!string.IsNullOrEmpty(filter.Keyword))
@@ -90,6 +98,14 @@ namespace NET1041_ASM.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "admin")
+            {
+                ViewData["ErrorMessage"] = "You do not have admin permission to access this page.";
+                return View("Error", "Shared");
+            }
+
             ViewBag.RoleOptions = new SelectList(new[]
             {
                 new { Value = "customer", Text = "Customer" },
@@ -123,10 +139,19 @@ namespace NET1041_ASM.Areas.Admin.Controllers
 
         public IActionResult Edit(int id)
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "admin")
+            {
+                ViewData["ErrorMessage"] = "You do not have admin permission to access this page.";
+                return View("Error", "Shared");
+            }
+
             var user = _accountService.GetUserById(id);
             if (user == null)
             {
-                return NotFound();
+                ViewData["ErrorMessage"] = "Not found content of this page.";
+                return View("Error", "Shared");
             }
             return View(user);
         }
@@ -151,6 +176,14 @@ namespace NET1041_ASM.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Deactive(int id)
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "admin")
+            {
+                ViewData["ErrorMessage"] = "You do not have admin permission to access this page.";
+                return View("Error", "Shared");
+            }
+
             var currentUser = int.Parse(HttpContext.Session.GetString("UserID"));
             if (currentUser == id)
             {
@@ -165,6 +198,14 @@ namespace NET1041_ASM.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Active(int id)
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "admin")
+            {
+                ViewData["ErrorMessage"] = "You do not have admin permission to access this page.";
+                return View("Error", "Shared");
+            }
+
             _accountService.ActiveUser(id);
             return RedirectToAction(nameof(Index));
         }

@@ -61,6 +61,7 @@
 <body>
     @{
         var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+        var userid = HttpContextAccessor.HttpContext.Session.GetString("UserID");
     }
 
     <!-- Layout wrapper -->
@@ -222,7 +223,7 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="/Admin/Account/Edit?id=@userid">
                                             <i class="bx bx-user me-2"></i>
                                             <span class="align-middle">My Profile</span>
                                         </a>
