@@ -1,0 +1,151 @@
+﻿@using NET1041_ASM.Models
+@model OrderFilterViewModel
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">Admin/</span> Order Management
+    </h4>
+
+    <!-- Filter Form -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Filter Orders</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-area="Admin" asp-controller="Order" asp-action="Index">
+                <div class="row g-3">
+                    <!-- Filter by Order ID -->
+                    <div class="col-md-6">
+                        <label for="OrderID" class="form-label">Order ID</label>
+                        <input type="number" name="OrderID" id="OrderID" class="form-control" placeholder="Enter Order ID" value="@Model.OrderID" />
+                    </div>
+
+                    <!-- Filter by Price -->
+                    <div class="col-md-6">
+                        <label class="form-label">Price Range</label>
+                        <div class="input-group">
+                            <input type="number" name="MinPrice" class="form-control" placeholder="Min" value="@Model.MinPrice" />
+                            <span class="input-group-text">to</span>
+                            <input type="number" name="MaxPrice" class="form-control" placeholder="Max" value="@Model.MaxPrice" />
+                        </div>
+                    </div>
+
+                    <!-- Filter by Date -->
+                    <div class="col-md-6">
+                        <label class="form-label">Date Range</label>
+                        <div class="input-group">
+                            <input type="date" name="FromDate" class="form-control" value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+                            <span class="input-group-text">to</span>
+                            <input type="date" name="ToDate" class="form-control" value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+                        </div>
+                    </div>
+
+                    <!-- Filter by Status -->
+                    <div class="col-md-6 mb-3">
+                        <label for="Status" class="form-label font-weight-bold text-yellow">Order Status</label>
+                        @Html.DropDownList("Status", new SelectList((IEnumerable<SelectListItem>)ViewBag.StatusOptions, "Value", "Text", Model.Status), "Select status", new { @class = "form-control", @id = "Status" })
+                    </div>
+
+                    <!-- Sort Options -->
+                    <div class="col-md-6 mb-3">
+                        <label for="SortBy" class="form-label font-weight-bold text-yellow">Sort by</label>
+                        @Html.DropDownList("SortBy", new SelectList((IEnumerable<SelectListItem>)ViewBag.SortByOptions, "Value", "Text", Model.SortBy), "Sort By", new { @class = "form-control", @id = "SortBy" })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="SortOrder" class="form-label font-weight-bold text-yellow">Sort Order</label>
+                        @Html.DropDownList("SortOrder", new SelectList((IEnumerable<SelectListItem>)ViewBag.SortOrderOptions, "Value", "Text", Model.SortOrder), "Order", new { @class = "form-control", @id = "SortOrder" })
+                    </div>
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="text-end mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bx bx-filter"></i> Apply Filters
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bx bx-reset"></i> Clear Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Display Orders -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Order List</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Orders == null || !Model.Orders.Any())
+            {
+                <div class="alert alert-warning text-center">
+                    <strong>No orders found!</strong>
+                </div>
+            }
+            else
+            {
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Username</th>
+                            <th>Order Date</th>
+                            <th>Status</th>
+                            <th>Total Amount</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.Orders)
+                        {
+                            <tr>
+                                <td>@order.OrderID</td>
+                                <td>@order.User.Username</td>
+                                <td>@order.OrderTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>
+                                    <span class="badge
+                                        @(order.Status == OrderStatus.Pending ? "bg-warning" :
+                                          order.Status == OrderStatus.Shipping ? "bg-info" :
+                                          order.Status == OrderStatus.Completed ? "bg-success" :
+                                          order.Status == OrderStatus.Cancelled ? "bg-danger" : "")">
+                                        @order.Status
+                                    </span>
+                                </td>
+                                <td>@order.TotalAmount.ToString("N0") VND</td>
+                                <td>
+                                    <a href="@Url.Action("Details", "Order", new { id = order.OrderID })" class="btn btn-outline-primary btn-sm">
+                                        <i class="bx bx-detail"></i> Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <!-- Pagination -->
+        @if (ViewBag.TotalPages > 1)
+        {
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", "Order", new
+                                    {
+                                        page = i,
+                                        Model.OrderID,
+                                        Model.MinPrice, Model.MaxPrice,
+                                        Model.FromDate, Model.ToDate,
+                                        Model.SortBy, Model.SortOrder,
+                                        Model.Status
+                                    })">
+                                @i
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+</div>

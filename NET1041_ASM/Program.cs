@@ -34,6 +34,7 @@ builder.Services.AddScoped<IAdminAccountService, AdminAccountService>();
 builder.Services.AddScoped<IAdminFoodService, AdminFoodService>();
 builder.Services.AddScoped<IAdminComboService, AdminComboService>();
 builder.Services.AddScoped<IAdminCategoryService, AdminCategoryService>();
+builder.Services.AddScoped<IAdminOrderService, AdminOrderService>();
 
 var app = builder.Build();
 
