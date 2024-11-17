@@ -18,9 +18,9 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult Order()
         {
-            var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");
@@ -44,8 +44,9 @@ namespace NET1041_ASM.Controllers
         public IActionResult Details(int id)
         {
             var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");
@@ -76,9 +77,9 @@ namespace NET1041_ASM.Controllers
 
         public IActionResult History([FromQuery] OrderFilterViewModel filter)
         {
-            var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");
@@ -172,9 +173,9 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult Cancel(int orderId)
         {
-            var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");

@@ -17,8 +17,9 @@ namespace NET1041_ASM.Controllers
         public IActionResult Profile()
         {
             var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");

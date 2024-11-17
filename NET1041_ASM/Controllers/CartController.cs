@@ -19,9 +19,9 @@ namespace NET1041_ASM.Controllers
 
         public IActionResult Index()
         {
-            var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");
@@ -49,9 +49,9 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult AddToCart(int foodItemId, int quantity)
         {
-            var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");
@@ -73,9 +73,9 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult AddComboToCart(int comboId, int quantity)
         {
-            var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");
@@ -97,9 +97,9 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult Remove(int CartItemID)
         {
-            var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");
@@ -120,9 +120,9 @@ namespace NET1041_ASM.Controllers
         [HttpPost]
         public IActionResult UpdateQuantity(int CartItemID, int Quantity)
         {
-            var username = HttpContext.Session.GetString("Username");
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(username))
+            if (userRole != "customer")
             {
                 TempData["ErrorMessage"] = "Please login with customer account to access this page.";
                 return RedirectToAction("Login", "Account");
