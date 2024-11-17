@@ -26,6 +26,7 @@ namespace NET1041_ASM.Models
         public string Role { get; set; } = "customer";
 
         public DateTime DateOfBirth { get; set; }
+        public bool IsActive { get; set; } = true;
 
         // Lazy loading
         public virtual ICollection<Order>? Orders { get; set; }

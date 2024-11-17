@@ -42,6 +42,11 @@ namespace NET1041_ASM.Services
                 throw new Exception("Password is not true.");
             }
 
+            if (user.IsActive == false)
+            {
+                throw new Exception("Cannot login because this user is deactived.");
+            }
+
             return true;
         }
 
